@@ -1,0 +1,76 @@
+---
+description: 
+globs: test/**,*_test.dart
+alwaysApply: false
+---
+# Testing Rules
+
+## Rule Type: Auto Attached
+File pattern matches: *test*.dart, test/**, *_test.dart
+
+## Testing Guidelines
+
+### Testing Structure
+- Mirror app structure in test folder
+- Use same folder organization as `lib/`
+- Group tests by feature and layer
+- Use descriptive test file names
+
+### Test Types
+1. **Unit Tests**: Test individual functions/classes
+2. **Widget Tests**: Test UI components in isolation
+3. **Integration Tests**: Test complete user flows
+
+### AAA Pattern
+```dart
+test('should return user when repository call is successful', () {
+  // Arrange
+  when(mockRepository.getUser(any))
+      .thenAnswer((_) async => const Right(tUser));
+  
+  // Act
+  final result = await usecase(const GetUserParams(id: '1'));
+  
+  // Assert
+  expect(result, const Right(tUser));
+  verify(mockRepository.getUser('1'));
+});
+```
+
+### Test Naming Convention
+- Use descriptive names: `should return user when repository call is successful`
+- Follow pattern: `should [expected result] when [condition]`
+- Use `group()` to organize related tests
+
+### Mocking Rules
+- Use `mockito` for unit tests
+- Use `mocktail` for null-safety
+- Mock all external dependencies
+- Create test doubles in `test/helpers/`
+
+### Widget Testing
+```dart
+testWidgets('should display loading indicator when state is loading', (tester) async {
+  // Arrange
+  when(() => mockCubit.state).thenReturn(const UserState.loading());
+  
+  // Act
+  await tester.pumpWidget(
+    MaterialApp(
+      home: BlocProvider<UserCubit>.value(
+        value: mockCubit,
+        child: const UserPage(),
+      ),
+    ),
+  );
+  
+  // Assert
+  expect(find.byType(CircularProgressIndicator), findsOneWidget);
+});
+```
+
+### Test Coverage Goals
+- Maintain 80%+ code coverage
+- Focus on business logic and critical paths
+- Don't aim for 100% - test what matters
+- Use `flutter test --coverage` to check coverage

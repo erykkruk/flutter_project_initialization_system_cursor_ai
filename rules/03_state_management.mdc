@@ -1,0 +1,69 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# State Management Rules
+
+## Rule Type: Auto Attached
+File pattern matches: *bloc*.dart, *cubit*.dart, *state*.dart, *event*.dart
+
+## Bloc/Cubit Guidelines
+
+### When to Use Cubit vs Bloc
+- **Use Cubit** for:
+  - Simple state changes
+  - Form validation
+  - UI state (loading, error, success)
+  - Settings management
+
+- **Use Bloc** for:
+  - Complex business logic
+  - Multiple event types
+  - State machines
+  - Complex data transformations
+
+### Cubit Implementation
+```dart
+@injectable
+class UserCubit extends Cubit<UserState> {
+  UserCubit(this._userRepository) : super(const UserState.initial());
+  
+  final UserRepository _userRepository;
+  
+  Future<void> loadUser(String id) async {
+    emit(const UserState.loading());
+    
+    final result = await _userRepository.getUser(id);
+    result.fold(
+      (failure) => emit(UserState.error(failure.message)),
+      (user) => emit(UserState.loaded(user)),
+    );
+  }
+}
+```
+
+### State Classes with Freezed
+```dart
+@freezed
+class UserState with _$UserState {
+  const factory UserState.initial() = _Initial;
+  const factory UserState.loading() = _Loading;
+  const factory UserState.loaded(User user) = _Loaded;
+  const factory UserState.error(String message) = _Error;
+}
+```
+
+### BlocProvider Usage
+- Use `BlocProvider` at the appropriate level
+- Don't provide globally unless truly global
+- Use `BlocListener` for side effects
+- Use `BlocBuilder` for UI rebuilds
+- Use `BlocConsumer` when you need both
+
+### State Management Best Practices
+- Keep state classes immutable
+- Use `copyWith` for partial updates
+- Emit new states, don't mutate existing ones
+- Handle loading states properly
+- Always handle error states

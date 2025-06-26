@@ -1,0 +1,80 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Performance Optimization Rules
+
+## Rule Type: Agent Requested
+Description: Performance optimization, memory management, app optimization, slow performance, memory leaks, build optimization
+
+## Performance Guidelines
+
+### Memory Management
+- Dispose controllers, streams, and subscriptions
+- Use `AutoDispose` for Riverpod providers
+- Avoid memory leaks in listeners
+- Profile memory usage regularly
+
+### Widget Performance
+```dart
+// ✅ Good - Use const constructors
+const Text('Hello World');
+
+// ✅ Good - Extract expensive widgets
+class ExpensiveWidget extends StatelessWidget {
+  const ExpensiveWidget({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return const SomeComplexWidget();
+  }
+}
+
+// ✅ Good - Use RepaintBoundary for expensive widgets
+RepaintBoundary(
+  child: CustomPaint(
+    painter: ComplexPainter(),
+  ),
+)
+```
+
+### List Performance
+```dart
+// ✅ Good - Use builder for long lists
+ListView.builder(
+  itemCount: items.length,
+  itemBuilder: (context, index) => ItemWidget(items[index]),
+)
+
+// ✅ Good - Use separatedBuilder for separators
+ListView.separated(
+  itemCount: items.length,
+  itemBuilder: (context, index) => ItemWidget(items[index]),
+  separatorBuilder: (context, index) => const Divider(),
+)
+```
+
+### Image Optimization
+- Use appropriate image formats (WebP for web)
+- Implement image caching
+- Use `CachedNetworkImage` for network images
+- Resize images appropriately
+
+### Build Optimization
+- Use `flutter build` with `--obfuscate` and `--split-debug-info`
+- Enable tree shaking
+- Minimize app bundle size
+- Use deferred loading for large features
+
+### Async Performance
+- Use `isolates` for heavy computations
+- Implement proper error handling
+- Use `Stream.periodic` instead of `Timer.periodic` when possible
+- Avoid blocking the UI thread
+
+### State Management Performance
+- Use `BlocSelector` for partial rebuilds
+- Implement proper `equatable` for state classes
+- Avoid unnecessary state emissions
+- Use `BlocListener` for side effects only

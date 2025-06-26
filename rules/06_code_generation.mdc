@@ -1,0 +1,79 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Code Generation Rules
+
+## Code Generation Guidelines
+
+### When to Use Code Generation
+- JSON serialization with `@JsonSerializable`
+- Dependency injection with `@injectable`
+- Immutable classes with `@freezed`
+
+### Build Runner Commands
+```bash
+# Clean generated files and regenerate
+fvm flutter packages pub run build_runner build --delete-conflicting-outputs
+```
+
+### Freezed Usage
+```dart
+@freezed
+class User with _$User {
+  const factory User({
+    required String id,
+    required String name,
+    required String email,
+    DateTime? createdAt,
+  }) = _User;
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+}
+```
+
+### Injectable Configuration
+```dart
+@module
+abstract class AppModule {
+  @singleton
+  Dio get dio => Dio();
+
+  @singleton
+  @preResolve
+  Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
+}
+
+@injectable
+class UserRepository {
+  UserRepository(this._dio, this._prefs);
+  
+  final Dio _dio;
+  final SharedPreferences _prefs;
+}
+```
+
+### JSON Serialization
+```dart
+@JsonSerializable()
+class UserModel extends User {
+  const UserModel({
+    required super.id,
+    required super.name,
+    required super.email,
+    super.createdAt,
+  });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) => 
+      _$UserModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
+}
+```
+
+### Generation Best Practices
+- Run code generation after adding annotations
+- Commit generated files to version control
+- Use `part` directive for generated files
+- Keep annotations simple and focused

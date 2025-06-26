@@ -1,0 +1,189 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Setup Rules
+
+## Rule Type: Manual
+This rule needs to be mentioned to be included
+
+## Project Initialization Guidelines
+
+### New Project Setup
+Use the provided initialization script:
+```bash
+./init_flutter_project.sh <project_name>
+```
+
+### Manual Setup Steps
+
+1. **Setup directory structure**
+   ```
+   lib/
+   ├── core/
+   │   ├── clients/
+   │   ├── config_tools/
+   │   ├── constants/
+   │   ├── exceptions/
+   │   ├── services/
+   │   ├── theme/
+   │   └── widgets/
+   └── features/
+       └── feature_name/
+           ├── data/
+           ├── domain/
+           └── presentation/
+   ```
+
+2. **Add dependencies using FVM Flutter commands**
+   
+   **ALWAYS use `fvm flutter pub add` instead of manually editing pubspec.yaml**
+   
+   ```bash
+   # Core dependencies
+   fvm flutter pub add flutter_bloc
+   fvm flutter pub add go_router
+   fvm flutter pub add get_it
+   fvm flutter pub add injectable
+   fvm flutter pub add freezed_annotation
+   fvm flutter pub add json_annotation
+   fvm flutter pub add intl
+   fvm flutter pub add dio
+   fvm flutter pub add retrofit
+   fvm flutter pub add shared_preferences
+   fvm flutter pub add sqflite
+   fvm flutter pub add connectivity_plus
+   fvm flutter pub add rxdart
+   fvm flutter pub add share_plus
+   fvm flutter pub add flutter_svg
+   
+   # Development dependencies
+   fvm flutter pub add build_runner --dev
+   fvm flutter pub add freezed --dev
+   fvm flutter pub add json_serializable --dev
+   fvm flutter pub add injectable_generator --dev
+   fvm flutter pub add retrofit_generator --dev
+   fvm flutter pub add mocktail --dev
+   fvm flutter pub add bloc_test --dev
+   fvm flutter pub add very_good_analysis --dev
+   ```
+
+### Dependency Management Best Practices
+
+**✅ Correct way - Use pub add commands:**
+```bash
+# Adding regular dependency
+fvm flutter pub add package_name
+
+# Adding dev dependency
+fvm flutter pub add package_name --dev
+
+# Adding with specific version
+fvm flutter pub add package_name:^1.0.0
+```
+
+**❌ Wrong way - Manual pubspec.yaml editing:**
+```yaml
+# Don't manually add to pubspec.yaml unless absolutely necessary
+dependencies:
+  some_package: ^1.0.0
+```
+
+**Why use `pub add`:**
+- Automatically gets the latest compatible version
+- Handles version conflicts automatically
+- Updates pubspec.lock properly
+- Runs `pub get` automatically
+- Less error-prone than manual editing
+
+### Removing Dependencies
+
+**✅ Correct way - Use pub remove:**
+```bash
+# Remove regular dependency
+fvm flutter pub remove package_name
+
+# Remove dev dependency
+fvm flutter pub remove package_name --dev
+```
+
+**❌ Wrong way - Manual pubspec.yaml editing:**
+```yaml
+# Don't manually remove from pubspec.yaml
+# This can leave orphaned dependencies in pubspec.lock
+```
+
+### Updating Dependencies
+
+```bash
+# Update all dependencies to latest compatible versions
+fvm flutter pub upgrade
+
+# Update specific package
+fvm flutter pub upgrade package_name
+
+# Get dependencies after changes
+fvm flutter pub get
+```
+
+### Essential Configuration Files
+- `.fvm/fvm_config.json` - Flutter version management
+- `analysis_options.yaml` - Linting rules
+- `l10n.yaml` - Internationalization config
+- `.vscode/settings.json` - VS Code FVM integration
+
+### Initial Architecture Setup
+1. Create `service_locator.dart` for dependency injection
+2. Setup `app_router.dart` with GoRouter
+3. Create theme system files
+4. Setup exception handling
+5. Create first feature following Clean Architecture
+
+### Development Workflow
+1. **Always use FVM commands:**
+   ```bash
+   # Use fvm flutter instead of flutter
+   fvm flutter run
+   fvm flutter test
+   fvm flutter build
+   ```
+
+2. **Dependency management:**
+   ```bash
+   # Add new dependencies
+   fvm flutter pub add package_name
+   
+   # Remove unused dependencies
+   fvm flutter pub remove package_name
+   
+   # Update dependencies
+   fvm flutter pub upgrade
+   ```
+
+3. **Code generation during development:**
+   ```bash
+   fvm flutter packages pub run build_runner watch
+   ```
+
+4. **Testing workflow:**
+   ```bash
+   # Run tests before merging
+   fvm flutter test --coverage
+   
+   # Run specific test
+   fvm flutter test test/path/to/test_file.dart
+   ```
+
+5. **Follow Clean Architecture practices:**
+   - Write tests first (TDD approach)
+   - Use feature branches
+   - Proper commit messages
+   - Code reviews before merging
+
+### Quality Assurance
+- Setup CI/CD pipeline
+- Configure automated testing
+- Setup code coverage reporting
+- Configure static analysis
+- Setup pre-commit hooks

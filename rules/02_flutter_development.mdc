@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Flutter Development Rules
+
+## Rule Type: Auto Attached
+File pattern matches: *.dart, pubspec.yaml, pubspec.lock, *.yaml
+
+## Flutter Best Practices
+
+### State Management
+- **Prefer Cubit over Bloc** for simple state management
+- keep state in same file
+- Use `@freezed` for immutable state classes
+
+### Widget Guidelines
+- Keep widgets small and focused (max 100 lines)
+- Extract complex widgets into separate files
+- Use `const` constructors whenever possible
+- Prefer composition over inheritance
+
+### Code Organization
+- Group imports: dart, flutter, packages, relative
+- Use relative imports for project files
+- Keep line length under 140 characters
+- Use meaningful variable and function names
+
+### Performance Rules
+- Use `ListView.builder` for long lists
+- Implement proper `dispose()` methods
+- Avoid rebuilding widgets unnecessarily
+- Use `RepaintBoundary` for expensive widgets
+
+### FVM Usage
+- Always use `fvm flutter` instead of `flutter` directly
+- Keep Flutter version consistent across team
+- Update FVM version in `.fvm/fvm_config.json`
+
+### Naming Conventions
+- Files: snake_case (user_profile_page.dart)
+- Classes: PascalCase (UserProfilePage)
+- Variables/methods: camelCase (userProfile)
+- Constants: SCREAMING_SNAKE_CASE (MAX_RETRY_COUNT)
+- Json: Json mapping use snake_case my_property_name_for_database
+- Private members: prefix with underscore (_privateMethod)
+

@@ -1,0 +1,78 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Flutter Clean Architecture - Core Rules
+
+## Rule Type: Always
+This rule is attached to every chat and command request
+
+## Architecture Overview
+
+```
+lib/
+├── core/                 # Shared utilities and services
+│   ├── clients/         # HTTP clients and network configuration
+│   ├── config_tools/    # App configuration and environment
+│   ├── constants/       # App-wide constants
+│   ├── exceptions/      # Custom exceptions and error handling
+│   ├── services/        # Core services (storage, analytics, etc.)
+│   ├── theme/          # Theme system (colors, typography, dimensions)
+│   └── widgets/        # Reusable UI components
+└── features/           # Feature modules
+    └── feature_name/
+        ├── domain/     # Business logic and entities
+        │   ├── entities/
+        │   ├── repositories/
+        │   └── usecases/
+        ├── data/       # Data layer implementation
+        │   ├── datasources/
+        │   ├── models/
+        │   └── repositories/
+        └── presentation/ # UI and state management
+            ├── pages/
+            ├── widgets/
+            └── cubit/
+```
+
+### Clean Architecture Layers
+```
+presentation/ (UI Layer)
+├── bloc/           # Business Logic Components
+├── cubit/          # Simple State Management
+├── pages/          # Screen implementations
+└── widgets/        # Reusable UI components
+
+domain/ (Business Logic Layer)
+├── entities/       # Business objects
+├── repositories/   # Abstract contracts
+└── usecases/       # Business logic operations
+
+data/ (Data Layer)
+├── datasources/    # Remote/Local data sources
+├── models/         # Data transfer objects
+└── repositories/   # Repository implementations
+```
+
+### Core Principles
+1. **Dependency Rule**: Inner layers never depend on outer layers
+2. **Single Responsibility**: Each class has one reason to change
+3. **Dependency Inversion**: Depend on abstractions, not concretions
+4. **Interface Segregation**: Keep interfaces small and focused
+
+### Folder Structure Rules
+- Use feature-based organization: `lib/features/feature_name/`
+- Each feature contains: `data/`, `domain/`, `presentation/`
+- Core shared code goes in: `lib/core/`
+
+### Dependency Injection
+- Use `@injectable` annotation for all services
+- Use `inject<T>()` for retrieval
+- Always inject dependencies through constructors
+
+### Error Handling
+- Use `Result<Success, Failure>` pattern in domain layer
+- Create specific exception types, not generic errors
+- Handle errors at presentation layer only
+- Log errors with proper context

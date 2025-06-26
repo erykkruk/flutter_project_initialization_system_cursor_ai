@@ -1,0 +1,114 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Theme System Rules
+
+## Rule Type: Auto Attached
+File pattern matches: *theme*.dart, *color*.dart, *typography*.dart, *dimension*.dart
+
+## Theme System Guidelines
+
+### Never Hardcode Values
+- **NEVER** use hardcoded colors: `Color(0xFF123456)`
+- **NEVER** use hardcoded dimensions: `SizedBox(height: 16)`
+- **NEVER** use hardcoded text styles: `TextStyle(fontSize: 14)`
+- **ALWAYS** use theme system values
+
+### Using Theme Values
+```dart
+// ✅ Correct - Use theme system
+Container(
+  padding: EdgeInsets.all(AppDimensions.padding.medium),
+  decoration: BoxDecoration(
+    color: Theme.of(context).colorScheme.primary,
+    borderRadius: BorderRadius.circular(AppDimensions.radius.small),
+  ),
+  child: Text(
+    'Hello World',
+    style: Theme.of(context).textTheme.titleMedium,
+  ),
+)
+
+// ❌ Wrong - Hardcoded values
+Container(
+  padding: const EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    color: Colors.blue,
+    borderRadius: BorderRadius.circular(8),
+  ),
+  child: const Text(
+    'Hello World',
+    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+  ),
+)
+```
+
+### 8-Point Grid System
+- Use multiples of 8 for spacing: 8, 16, 24, 32, 40...
+- Use 4-point for small adjustments: 4, 12, 20...
+- Define standard sizes in `AppDimensions`
+
+### Color Naming Convention
+- Use semantic names, not descriptive: `primary`, `secondary`, `error`
+- Avoid color-specific names: `blue`, `red`, `green`
+- Use context-based names: `surface`, `onSurface`, `background`
+
+### Typography System
+- Define text styles in theme
+- Use semantic names: `headlineLarge`, `bodyMedium`, `labelSmall`
+- Maintain consistent line heights and letter spacing
+
+### Dark Mode Support
+- Always test in both light and dark modes
+- Use semantic colors that work in both themes
+- Test color contrast ratios (WCAG compliance)
+
+### Internationalization (i18n) Integration
+- **ALWAYS** use localized strings instead of hardcoded text
+- **NEVER** hardcode user-facing strings in UI code
+- Use `context.l10n.keyName` for all displayed text
+
+```dart
+// ✅ Correct - Use localized strings
+Text(
+  context.l10n.welcomeMessage,
+  style: Theme.of(context).textTheme.headlineMedium,
+)
+
+AppBar(
+  title: Text(context.l10n.homePageTitle),
+)
+
+// ❌ Wrong - Hardcoded strings
+Text(
+  'Welcome to the app',
+  style: Theme.of(context).textTheme.headlineMedium,
+)
+
+AppBar(
+  title: const Text('Home'),
+)
+```
+
+### Text and Theme Integration
+- Combine theme styles with localized strings
+- Consider text length variations across languages
+- Test UI layout with longer translated strings
+- Use proper text overflow handling for different languages
+
+```dart
+// ✅ Proper integration of theme and i18n
+Text(
+  context.l10n.longDescriptionText,
+  style: Theme.of(context).textTheme.bodyMedium,
+  overflow: TextOverflow.ellipsis,
+  maxLines: 2,
+)
+```
+
+### Testing with Localization
+- Test theme with different language strings
+- Verify proper text scaling in various locales
+- Ensure consistent spacing with translated content
